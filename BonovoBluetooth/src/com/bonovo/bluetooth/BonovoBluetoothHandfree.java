@@ -44,10 +44,9 @@ import android.database.Cursor;
 import com.bonovo.bluetooth.BonovoBlueToothService.BonovoBlueToothData;
 import com.bonovo.bluetooth.dialpad.DialpadImageButton;
 
-
 public class BonovoBluetoothHandfree extends Activity
-		implements View.OnClickListener, View.OnLongClickListener,
-		DialpadImageButton.OnPressedListener, AudioManager.OnAudioFocusChangeListener {
+	implements View.OnClickListener, View.OnLongClickListener,
+	DialpadImageButton.OnPressedListener, AudioManager.OnAudioFocusChangeListener {
 
 	private final boolean DEBUG = true;
 	private final String TAG = "BonovoBluetoothHandfree";
@@ -89,7 +88,6 @@ public class BonovoBluetoothHandfree extends Activity
 	private ImageView mPhoneSignalMeter;
 	private ImageView mPhoneBatteryMeter;
 
-
 	private boolean mTimerIsCounting = false;
 	private boolean mIsUserStarted = false;
 
@@ -119,10 +117,10 @@ public class BonovoBluetoothHandfree extends Activity
 
 	// Specifies the layouts that can be displayed by setView()
 	enum phoneLayouts {
-		PHONE_DIALPAD,
-		PHONE_INCALL,
-		PHONE_RINGING_IN,
-		PHONE_RINGING_OUT
+	       PHONE_DIALPAD,
+	       PHONE_INCALL,
+	       PHONE_RINGING_IN,
+	       PHONE_RINGING_OUT
 	}
 
 	private BroadcastReceiver myReceiver = new BroadcastReceiver() {
@@ -287,11 +285,11 @@ public class BonovoBluetoothHandfree extends Activity
 				mPhoneBatteryMeter.setImageDrawable(context.getResources().getDrawable(mPhoneBatteryLevel[level]));
 
 			}else if(BonovoBlueToothData.ACTION_PHONE_NAME_RECEIVED.equals(action)){
-				//	String name = intent.getStringExtra("name");
-				//
-				//	if (name != null && name.isEmpty() == false) {
-				//		setCallInfo("", name);
-				//	}
+			//	String name = intent.getStringExtra("name");
+			//
+			//	if (name != null && name.isEmpty() == false) {
+			//		setCallInfo("", name);
+			//	}
 			}
 		}
 	};
@@ -334,8 +332,8 @@ public class BonovoBluetoothHandfree extends Activity
 				requestAudioFocus();
 				setView(phoneLayouts.PHONE_RINGING_IN);
 				mCallTime.setText(R.string.description_phone_incoming);
-				String number = myBlueToothService.getCurrentNumber();
-				setCallInfo(mContext, number);
+                String number = myBlueToothService.getCurrentNumber();
+                setCallInfo(mContext, number);
 
 				final Editable digits = mDigits.getText();
 				digits.clear();
@@ -344,8 +342,8 @@ public class BonovoBluetoothHandfree extends Activity
 				requestAudioFocus();
 				setView(phoneLayouts.PHONE_RINGING_OUT);
 				mCallTime.setText(R.string.description_phone_dialing);
-				String number = myBlueToothService.getCurrentNumber();
-				setCallInfo(mContext, number);
+                String number = myBlueToothService.getCurrentNumber();
+                setCallInfo(mContext, number);
 
 				final Editable digits = mDigits.getText();
 				digits.clear();
@@ -355,8 +353,8 @@ public class BonovoBluetoothHandfree extends Activity
 				setView(phoneLayouts.PHONE_INCALL);
 				startCallTimer(myBlueToothService.getAnswerTime());
 				mCallTime.setText(R.string.description_phone_in_call);
-				String number = myBlueToothService.getCurrentNumber();
-				setCallInfo(mContext, number);
+                String number = myBlueToothService.getCurrentNumber();
+                setCallInfo(mContext, number);
 
 				final Editable digits = mDigits.getText();
 				digits.clear();
@@ -380,22 +378,22 @@ public class BonovoBluetoothHandfree extends Activity
 			int what = msg.what;
 
 			switch (what) {
-				case MSG_DIAL_HANG_UP:{
+			case MSG_DIAL_HANG_UP:{
 
-					if(!mIsUserStarted){
-						// Call ended, close the app since the user didn't start it
-						mHandler.removeMessages(MSG_DIAL_HANG_UP);
-						finish();
-					} else {
-						// The user was already running the app, switch back to the dialer
-						setView(phoneLayouts.PHONE_DIALPAD);
-						mDigits.setText("");
-					}
+				if(!mIsUserStarted){
+					// Call ended, close the app since the user didn't start it
+					mHandler.removeMessages(MSG_DIAL_HANG_UP);
+					finish();
+				} else {
+					// The user was already running the app, switch back to the dialer
+					setView(phoneLayouts.PHONE_DIALPAD);
+					mDigits.setText("");
 				}
+			}
 				break;
 
-				default:
-					break;
+			default:
+				break;
 			}
 		}
 	};
@@ -517,8 +515,8 @@ public class BonovoBluetoothHandfree extends Activity
 		}
 		mDialpadPressCount = 0;
 
-		if(myBlueToothService != null){
-			BonovoBlueToothService.PhoneState phoneState = myBlueToothService.getPhoneState();
+        if(myBlueToothService != null){
+            BonovoBlueToothService.PhoneState phoneState = myBlueToothService.getPhoneState();
 			if(BonovoBlueToothService.PhoneState.IDLE == phoneState
 					|| BonovoBlueToothService.PhoneState.OFFHOOK == phoneState){
 				mCallTime.setText(R.string.description_phone_hang_up);
@@ -530,8 +528,8 @@ public class BonovoBluetoothHandfree extends Activity
 				requestAudioFocus();
 				setView(phoneLayouts.PHONE_RINGING_IN);
 				mCallTime.setText(R.string.description_phone_incoming);
-				String number = myBlueToothService.getCurrentNumber();
-				setCallInfo(mContext, number);
+                String number = myBlueToothService.getCurrentNumber();
+                setCallInfo(mContext, number);
 
 				final Editable digits = mDigits.getText();
 				digits.clear();
@@ -541,8 +539,8 @@ public class BonovoBluetoothHandfree extends Activity
 				requestAudioFocus();
 				setView(phoneLayouts.PHONE_RINGING_OUT);
 				mCallTime.setText(R.string.description_phone_dialing);
-				String number = myBlueToothService.getCurrentNumber();
-				setCallInfo(mContext, number);
+                String number = myBlueToothService.getCurrentNumber();
+                setCallInfo(mContext, number);
 
 				final Editable digits = mDigits.getText();
 				digits.clear();
@@ -552,13 +550,13 @@ public class BonovoBluetoothHandfree extends Activity
 				setView(phoneLayouts.PHONE_INCALL);
 				startCallTimer(myBlueToothService.getAnswerTime());
 				mCallTime.setText(R.string.description_phone_in_call);
-				String number = myBlueToothService.getCurrentNumber();
-				setCallInfo(mContext, number);
+                String number = myBlueToothService.getCurrentNumber();
+                setCallInfo(mContext, number);
 
 				final Editable digits = mDigits.getText();
 				digits.clear();
 			}
-		}
+        }
 	}
 
 	@Override
@@ -566,93 +564,93 @@ public class BonovoBluetoothHandfree extends Activity
 		// TODO Auto-generated method stub
 		if(DEBUG) Log.d(TAG, "======= onClick()");
 		switch (v.getId()) {
-			case R.id.deleteButton:
-				keyPressed(KeyEvent.KEYCODE_DEL);
-				break;
+		case R.id.deleteButton:
+			keyPressed(KeyEvent.KEYCODE_DEL);
+			break;
 
-			case R.id.digits:
-				if(!isDigitsEmpty()){
-					mDigits.setCursorVisible(true);
-				}
-				break;
+		case R.id.digits:
+			if(!isDigitsEmpty()){
+				mDigits.setCursorVisible(true);
+			}
+			break;
 
-			case R.id.dialButton:
-				dialButtonPressed();
-				break;
+		case R.id.dialButton:
+			dialButtonPressed();
+			break;
 
-			case R.id.endCallButton:
-				if(myBlueToothService != null){
-					if(BonovoBlueToothService.PhoneState.RINGING == myBlueToothService.getPhoneState()){
-						myBlueToothService.BlueToothPhoneRejectCall();
-					}else{
-						myBlueToothService.BlueToothPhoneHangup();
-					}
-				}
-				break;
-
-			case R.id.answerButton:
-				if(myBlueToothService != null) {
-					myBlueToothService.BlueToothPhoneAnswer();
-					setView(phoneLayouts.PHONE_INCALL);
-				}
-				break;
-
-			case R.id.backToCallButton:
-				// Switch back from dial pad to active call
-				setView(phoneLayouts.PHONE_INCALL);
-				break;
-
-			case R.id.DialpadViewButton:
-				// Force switch view from incall to dialpad, normally because the caller
-				//   needs to send DTMF codes (press 1 for x, press 2 for y...)
-				setView(phoneLayouts.PHONE_DIALPAD);
-				break;
-
-			case R.id.MuteMicButton:
-				// Toggles the microphone off and on
-
-				// Get state of microphone before requesting switch
-				Boolean currMuteState = myBlueToothService.BlueToothMicrophoneState();
-				myBlueToothService.BlueToothPhoneMute();
-
-				// Record new state of Microphone
-				currMuteState = !currMuteState;
-				if(currMuteState == true) {
-					// Microphone is currently off
-					mMicMuteButton.setImageResource(R.drawable.ic_dial_call_muted);
+		case R.id.endCallButton:
+			if(myBlueToothService != null){
+				if(BonovoBlueToothService.PhoneState.RINGING == myBlueToothService.getPhoneState()){
+					myBlueToothService.BlueToothPhoneRejectCall();
 				}else{
-					// Microphone is currently on
-					mMicMuteButton.setImageResource(R.drawable.ic_dial_call_unmuted);
+					myBlueToothService.BlueToothPhoneHangup();
 				}
+			}
+			break;
 
-				break;
-			case R.id.ConferenceButton:
-				// merge calls into a conference call
-				if(myBlueToothService != null){
-					myBlueToothService.BlueToothPhoneConferenceCalls();
-				}
-				break;
-			case R.id.CWRejectButton:
-				// Reject Call Waiting
-				if(myBlueToothService != null){
-					myBlueToothService.BlueToothPhoneRejectWaitingCall();
-				}
-				break;
-			case R.id.CWEndAndSwitch:
-				// Switch to call waiting and end current call
-				if(myBlueToothService != null){
-					myBlueToothService.BlueToothPhoneEndAndSwitchToWaitingCall();
-				}
+		case R.id.answerButton:
+			if(myBlueToothService != null) {
+				myBlueToothService.BlueToothPhoneAnswer();
+				setView(phoneLayouts.PHONE_INCALL);
+			}
+			break;
 
-			case R.id.CWHoldAndSwitch:
-				// Switch to call waiting and put current call on hold
-				if(myBlueToothService != null){
-					myBlueToothService.BlueToothPhoneHoldAndSwitchToWaitingCall();
-				}
+		case R.id.backToCallButton:
+			// Switch back from dial pad to active call
+			setView(phoneLayouts.PHONE_INCALL);
+			break;
 
-			default:
-				Log.wtf(TAG, "Unexpected onClick() event from:" + v);
-				break;
+		case R.id.DialpadViewButton:
+			// Force switch view from incall to dialpad, normally because the caller
+			//   needs to send DTMF codes (press 1 for x, press 2 for y...)
+			setView(phoneLayouts.PHONE_DIALPAD);
+			break;
+
+		case R.id.MuteMicButton:
+			// Toggles the microphone off and on
+
+			// Get state of microphone before requesting switch
+			Boolean currMuteState = myBlueToothService.BlueToothMicrophoneState();
+			myBlueToothService.BlueToothPhoneMute();
+
+			// Record new state of Microphone
+			currMuteState = !currMuteState;
+			if(currMuteState == true) {
+				// Microphone is currently off
+				mMicMuteButton.setImageResource(R.drawable.ic_dial_call_muted);
+			}else{
+				// Microphone is currently on
+				mMicMuteButton.setImageResource(R.drawable.ic_dial_call_unmuted);
+			}
+
+			break;
+		case R.id.ConferenceButton:
+			// merge calls into a conference call
+			if(myBlueToothService != null){
+				myBlueToothService.BlueToothPhoneConferenceCalls();
+			}
+			break;
+		case R.id.CWRejectButton:
+			// Reject Call Waiting
+			if(myBlueToothService != null){
+				myBlueToothService.BlueToothPhoneRejectWaitingCall();
+			}
+			break;
+		case R.id.CWEndAndSwitch:
+			// Switch to call waiting and end current call
+			if(myBlueToothService != null){
+				myBlueToothService.BlueToothPhoneEndAndSwitchToWaitingCall();
+			}
+
+		case R.id.CWHoldAndSwitch:
+			// Switch to call waiting and put current call on hold
+			if(myBlueToothService != null){
+				myBlueToothService.BlueToothPhoneHoldAndSwitchToWaitingCall();
+			}
+
+		default:
+			Log.wtf(TAG, "Unexpected onClick() event from:" + v);
+			break;
 		}
 	}
 
@@ -662,31 +660,31 @@ public class BonovoBluetoothHandfree extends Activity
 		final Editable digits = mDigits.getText();
 		final int id = v.getId();
 		switch(id){
-			case R.id.deleteButton:
-				digits.clear();
+		case R.id.deleteButton:
+			digits.clear();
+			return true;
+
+		case R.id.one:
+			return false;
+
+		case R.id.zero:
+			removePreviousDigitIfPossible();
+			keyPressed(KeyEvent.KEYCODE_PLUS);
+			stopTone();
+			if(mDialpadPressCount > 0) mDialpadPressCount--;
+			return true;
+
+		case R.id.digits:
+			mDigits.setCursorVisible(true);
+			return false;
+
+		case R.id.dialButton:
+			if(isDigitsEmpty()){
+				handleDialButtonClickWithEmptyDigits();
 				return true;
-
-			case R.id.one:
+			}else{
 				return false;
-
-			case R.id.zero:
-				removePreviousDigitIfPossible();
-				keyPressed(KeyEvent.KEYCODE_PLUS);
-				stopTone();
-				if(mDialpadPressCount > 0) mDialpadPressCount--;
-				return true;
-
-			case R.id.digits:
-				mDigits.setCursorVisible(true);
-				return false;
-
-			case R.id.dialButton:
-				if(isDigitsEmpty()){
-					handleDialButtonClickWithEmptyDigits();
-					return true;
-				}else{
-					return false;
-				}
+			}
 		}
 		return false;
 	}
@@ -697,57 +695,57 @@ public class BonovoBluetoothHandfree extends Activity
 		if(DEBUG) Log.d(TAG, "====== onPressed");
 		if(pressed) {
 			switch (view.getId()) {
-				case R.id.one:
-					keyPressed(KeyEvent.KEYCODE_1);
-					break;
+			case R.id.one:
+				keyPressed(KeyEvent.KEYCODE_1);
+				break;
 
-				case R.id.two:
-					keyPressed(KeyEvent.KEYCODE_2);
-					break;
+			case R.id.two:
+				keyPressed(KeyEvent.KEYCODE_2);
+				break;
 
-				case R.id.three:
-					keyPressed(KeyEvent.KEYCODE_3);
-					break;
+			case R.id.three:
+				keyPressed(KeyEvent.KEYCODE_3);
+				break;
 
-				case R.id.four:
-					keyPressed(KeyEvent.KEYCODE_4);
-					break;
+			case R.id.four:
+				keyPressed(KeyEvent.KEYCODE_4);
+				break;
 
-				case R.id.five:
-					keyPressed(KeyEvent.KEYCODE_5);
-					break;
+			case R.id.five:
+				keyPressed(KeyEvent.KEYCODE_5);
+				break;
 
-				case R.id.six:
-					keyPressed(KeyEvent.KEYCODE_6);
-					break;
+			case R.id.six:
+				keyPressed(KeyEvent.KEYCODE_6);
+				break;
 
-				case R.id.seven:
-					keyPressed(KeyEvent.KEYCODE_7);
-					break;
+			case R.id.seven:
+				keyPressed(KeyEvent.KEYCODE_7);
+				break;
 
-				case R.id.eight:
-					keyPressed(KeyEvent.KEYCODE_8);
-					break;
+			case R.id.eight:
+				keyPressed(KeyEvent.KEYCODE_8);
+				break;
 
-				case R.id.nine:
-					keyPressed(KeyEvent.KEYCODE_9);
-					break;
+			case R.id.nine:
+				keyPressed(KeyEvent.KEYCODE_9);
+				break;
 
-				case R.id.zero:
-					keyPressed(KeyEvent.KEYCODE_0);
-					break;
+			case R.id.zero:
+				keyPressed(KeyEvent.KEYCODE_0);
+				break;
 
-				case R.id.star:
-					keyPressed(KeyEvent.KEYCODE_STAR);
-					break;
+			case R.id.star:
+				keyPressed(KeyEvent.KEYCODE_STAR);
+				break;
 
-				case R.id.pound:
-					keyPressed(KeyEvent.KEYCODE_POUND);
-					break;
+			case R.id.pound:
+				keyPressed(KeyEvent.KEYCODE_POUND);
+				break;
 
-				default:
-					if(DEBUG) Log.d(TAG, "Unexpected onTouch(ACTION_DOWN) event from: " + view);
-					break;
+			default:
+				if(DEBUG) Log.d(TAG, "Unexpected onTouch(ACTION_DOWN) event from: " + view);
+				break;
 			}
 			mDialpadPressCount++;
 		} else {
@@ -779,25 +777,25 @@ public class BonovoBluetoothHandfree extends Activity
 
 		if(DEBUG) Log.d(TAG, "SetCallInfo called with phone number: " + number);
 
-		Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
-		Cursor cursor = context.getContentResolver().query(uri,
-				new String[] { PhoneLookup.DISPLAY_NAME, PhoneLookup.PHOTO_THUMBNAIL_URI},
-				null, null, null);
+	    Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+	    Cursor cursor = context.getContentResolver().query(uri,
+	        new String[] { PhoneLookup.DISPLAY_NAME, PhoneLookup.PHOTO_THUMBNAIL_URI},
+	        null, null, null);
 
-		String contactName = "";
-		String contactPhotoUri = "";
+	    String contactName = "";
+	    String contactPhotoUri = "";
 
-		if (cursor.moveToFirst()) {
-			do {
-				contactName = cursor.getString(cursor.getColumnIndex(PhoneLookup.DISPLAY_NAME));
-				contactPhotoUri = cursor.getString(cursor.getColumnIndex(PhoneLookup.PHOTO_THUMBNAIL_URI));
-			} while (cursor.moveToNext());
-		}
+	    if (cursor.moveToFirst()) {
+	        do {
+	        	contactName = cursor.getString(cursor.getColumnIndex(PhoneLookup.DISPLAY_NAME));
+	        	contactPhotoUri = cursor.getString(cursor.getColumnIndex(PhoneLookup.PHOTO_THUMBNAIL_URI));
+	        } while (cursor.moveToNext());
+	    }
 
-		cursor.close();
+	    cursor.close();
 
-		String disp = number;
-		if (contactName != "") disp = contactName;
+	    String disp = number;
+	    if (contactName != "") disp = contactName;
 
 		mCallNumber.setText(disp);
 		setContactPhoto(context, contactPhotoUri);
@@ -844,8 +842,8 @@ public class BonovoBluetoothHandfree extends Activity
 
 	// Sets the photo on the incall page to the image specified in PhotoUri
 	private void setContactPhoto(Context context, String PhotoUri){
-		if(context == null || mContactPhoto == null)
-			return;
+        if(context == null || mContactPhoto == null)
+	        return;
 
 		if (PhotoUri == null || PhotoUri.isEmpty()) {
 			// Show the default image
@@ -937,27 +935,19 @@ public class BonovoBluetoothHandfree extends Activity
 	private void setView(phoneLayouts requestedLayout){
 
 		switch (requestedLayout) {
-			case PHONE_DIALPAD:
-				mLeftPanel.setVisibility(View.VISIBLE);
-				mIncomingStub.setVisibility(View.GONE);
+		case PHONE_DIALPAD:
+			mLeftPanel.setVisibility(View.VISIBLE);
+			mIncomingStub.setVisibility(View.GONE);
 
-				mAnswerButton.setVisibility(View.GONE);
-				mEndCallButton.setVisibility(View.GONE);
+			mAnswerButton.setVisibility(View.GONE);
+			mEndCallButton.setVisibility(View.GONE);
 
-				// Dial pad can show to both dial a number and to send DTMF codes during an active call.
-				//  Therefore it has two different states to handle
-				if(myBlueToothService != null){
-					if(BonovoBlueToothService.PhoneState.ACTIVE == myBlueToothService.getPhoneState()){
-						mBackToCallButton.setVisibility(View.VISIBLE);
-						mDialStub.setVisibility(View.GONE);
-					}else{
-						mBackToCallButton.setVisibility(View.GONE);
-						mDialStub.setVisibility(View.VISIBLE);
-
-						mCallTime.setText("");
-						mCallNumber.setText("");
-						mTimer.setVisibility(View.GONE);
-					}
+			// Dial pad can show to both dial a number and to send DTMF codes during an active call.
+			//  Therefore it has two different states to handle
+			if(myBlueToothService != null){
+				if(BonovoBlueToothService.PhoneState.ACTIVE == myBlueToothService.getPhoneState()){
+					mBackToCallButton.setVisibility(View.VISIBLE);
+					mDialStub.setVisibility(View.GONE);
 				}else{
 					mBackToCallButton.setVisibility(View.GONE);
 					mDialStub.setVisibility(View.VISIBLE);
@@ -966,49 +956,57 @@ public class BonovoBluetoothHandfree extends Activity
 					mCallNumber.setText("");
 					mTimer.setVisibility(View.GONE);
 				}
+			}else{
+				mBackToCallButton.setVisibility(View.GONE);
+				mDialStub.setVisibility(View.VISIBLE);
 
-				break;
-
-			case PHONE_INCALL:
-				mIncomingStub.setVisibility(View.VISIBLE);
-				mDialStub.setVisibility(View.GONE);
-				mLeftPanel.setVisibility(View.GONE);
-				mCallNumber.setVisibility(View.VISIBLE);
-				mAnswerButton.setVisibility(View.GONE);
-				mEndCallButton.setVisibility(View.VISIBLE);
-				mDialpadViewButton.setVisibility(View.VISIBLE);
-				mMicMuteButton.setVisibility(View.VISIBLE);
-
-				mTimer.setVisibility(View.VISIBLE);
-				break;
-
-			case PHONE_RINGING_IN:
-				mIncomingStub.setVisibility(View.VISIBLE);
-				mDialStub.setVisibility(View.GONE);
-				mLeftPanel.setVisibility(View.GONE);
-				mCallNumber.setVisibility(View.VISIBLE);
-				mAnswerButton.setVisibility(View.VISIBLE);
-				mEndCallButton.setVisibility(View.VISIBLE);
-				mDialpadViewButton.setVisibility(View.GONE);
-				mMicMuteButton.setVisibility(View.GONE);
-				mConferenceButton.setVisibility(View.GONE);
-
+				mCallTime.setText("");
+				mCallNumber.setText("");
 				mTimer.setVisibility(View.GONE);
-				break;
+			}
 
-			case PHONE_RINGING_OUT:
-				mIncomingStub.setVisibility(View.VISIBLE);
-				mLeftPanel.setVisibility(View.GONE);
-				mDialStub.setVisibility(View.GONE);
-				mCallNumber.setVisibility(View.VISIBLE);
-				mAnswerButton.setVisibility(View.GONE);
-				mEndCallButton.setVisibility(View.VISIBLE);
-				mDialpadViewButton.setVisibility(View.GONE);
-				mMicMuteButton.setVisibility(View.GONE);
-				mConferenceButton.setVisibility(View.GONE);
+			break;
 
-				mTimer.setVisibility(View.GONE);
-				break;
+		case PHONE_INCALL:
+			mIncomingStub.setVisibility(View.VISIBLE);
+			mDialStub.setVisibility(View.GONE);
+			mLeftPanel.setVisibility(View.GONE);
+			mCallNumber.setVisibility(View.VISIBLE);
+			mAnswerButton.setVisibility(View.GONE);
+			mEndCallButton.setVisibility(View.VISIBLE);
+			mDialpadViewButton.setVisibility(View.VISIBLE);
+			mMicMuteButton.setVisibility(View.VISIBLE);
+
+			mTimer.setVisibility(View.VISIBLE);
+			break;
+
+		case PHONE_RINGING_IN:
+			mIncomingStub.setVisibility(View.VISIBLE);
+			mDialStub.setVisibility(View.GONE);
+			mLeftPanel.setVisibility(View.GONE);
+			mCallNumber.setVisibility(View.VISIBLE);
+			mAnswerButton.setVisibility(View.VISIBLE);
+			mEndCallButton.setVisibility(View.VISIBLE);
+			mDialpadViewButton.setVisibility(View.GONE);
+			mMicMuteButton.setVisibility(View.GONE);
+			mConferenceButton.setVisibility(View.GONE);
+
+			mTimer.setVisibility(View.GONE);
+			break;
+
+		case PHONE_RINGING_OUT:
+			mIncomingStub.setVisibility(View.VISIBLE);
+			mLeftPanel.setVisibility(View.GONE);
+			mDialStub.setVisibility(View.GONE);
+			mCallNumber.setVisibility(View.VISIBLE);
+			mAnswerButton.setVisibility(View.GONE);
+			mEndCallButton.setVisibility(View.VISIBLE);
+			mDialpadViewButton.setVisibility(View.GONE);
+			mMicMuteButton.setVisibility(View.GONE);
+			mConferenceButton.setVisibility(View.GONE);
+
+			mTimer.setVisibility(View.GONE);
+			break;
 
 		}
 	}
@@ -1083,8 +1081,8 @@ public class BonovoBluetoothHandfree extends Activity
 
 	private void setupKeypad(){
 		int[] buttonIds = new int[] { R.id.one, R.id.two, R.id.three,
-				R.id.four, R.id.five, R.id.six, R.id.seven, R.id.eight,
-				R.id.nine, R.id.zero, R.id.star, R.id.pound};
+			R.id.four, R.id.five, R.id.six, R.id.seven, R.id.eight,
+			R.id.nine, R.id.zero, R.id.star, R.id.pound};
 		for(int id : buttonIds){
 			((DialpadImageButton)findViewById(id)).setOnPressedListener(this);
 		}
@@ -1159,182 +1157,182 @@ public class BonovoBluetoothHandfree extends Activity
 
 	private void keyPressed(int keyCode) {
 		String dtmfNumber = "";
-		switch (keyCode) {
-			case KeyEvent.KEYCODE_1:
-				playTone(ToneGenerator.TONE_DTMF_1, TONE_LENGTH_INFINITE);
-				dtmfNumber = "1";
-				break;
-			case KeyEvent.KEYCODE_2:
-				playTone(ToneGenerator.TONE_DTMF_2, TONE_LENGTH_INFINITE);
-				dtmfNumber = "2";
-				break;
-			case KeyEvent.KEYCODE_3:
-				playTone(ToneGenerator.TONE_DTMF_3, TONE_LENGTH_INFINITE);
-				dtmfNumber = "3";
-				break;
-			case KeyEvent.KEYCODE_4:
-				playTone(ToneGenerator.TONE_DTMF_4, TONE_LENGTH_INFINITE);
-				dtmfNumber = "4";
-				break;
-			case KeyEvent.KEYCODE_5:
-				playTone(ToneGenerator.TONE_DTMF_5, TONE_LENGTH_INFINITE);
-				dtmfNumber = "5";
-				break;
-			case KeyEvent.KEYCODE_6:
-				playTone(ToneGenerator.TONE_DTMF_6, TONE_LENGTH_INFINITE);
-				dtmfNumber = "6";
-				break;
-			case KeyEvent.KEYCODE_7:
-				playTone(ToneGenerator.TONE_DTMF_7, TONE_LENGTH_INFINITE);
-				dtmfNumber = "7";
-				break;
-			case KeyEvent.KEYCODE_8:
-				playTone(ToneGenerator.TONE_DTMF_8, TONE_LENGTH_INFINITE);
-				dtmfNumber = "8";
-				break;
-			case KeyEvent.KEYCODE_9:
-				playTone(ToneGenerator.TONE_DTMF_9, TONE_LENGTH_INFINITE);
-				dtmfNumber = "9";
-				break;
-			case KeyEvent.KEYCODE_0:
-				playTone(ToneGenerator.TONE_DTMF_0, TONE_LENGTH_INFINITE);
-				dtmfNumber = "0";
-				break;
-			case KeyEvent.KEYCODE_POUND:
-				playTone(ToneGenerator.TONE_DTMF_P, TONE_LENGTH_INFINITE);
-				dtmfNumber = "#";
-				break;
-			case KeyEvent.KEYCODE_STAR:
-				playTone(ToneGenerator.TONE_DTMF_S, TONE_LENGTH_INFINITE);
-				dtmfNumber = "*";
-				break;
-			default:
-				break;
-		}
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_1:
+                playTone(ToneGenerator.TONE_DTMF_1, TONE_LENGTH_INFINITE);
+                dtmfNumber = "1";
+                break;
+            case KeyEvent.KEYCODE_2:
+                playTone(ToneGenerator.TONE_DTMF_2, TONE_LENGTH_INFINITE);
+                dtmfNumber = "2";
+                break;
+            case KeyEvent.KEYCODE_3:
+                playTone(ToneGenerator.TONE_DTMF_3, TONE_LENGTH_INFINITE);
+                dtmfNumber = "3";
+                break;
+            case KeyEvent.KEYCODE_4:
+                playTone(ToneGenerator.TONE_DTMF_4, TONE_LENGTH_INFINITE);
+                dtmfNumber = "4";
+                break;
+            case KeyEvent.KEYCODE_5:
+                playTone(ToneGenerator.TONE_DTMF_5, TONE_LENGTH_INFINITE);
+                dtmfNumber = "5";
+                break;
+            case KeyEvent.KEYCODE_6:
+                playTone(ToneGenerator.TONE_DTMF_6, TONE_LENGTH_INFINITE);
+                dtmfNumber = "6";
+                break;
+            case KeyEvent.KEYCODE_7:
+                playTone(ToneGenerator.TONE_DTMF_7, TONE_LENGTH_INFINITE);
+                dtmfNumber = "7";
+                break;
+            case KeyEvent.KEYCODE_8:
+                playTone(ToneGenerator.TONE_DTMF_8, TONE_LENGTH_INFINITE);
+                dtmfNumber = "8";
+                break;
+            case KeyEvent.KEYCODE_9:
+                playTone(ToneGenerator.TONE_DTMF_9, TONE_LENGTH_INFINITE);
+                dtmfNumber = "9";
+                break;
+            case KeyEvent.KEYCODE_0:
+                playTone(ToneGenerator.TONE_DTMF_0, TONE_LENGTH_INFINITE);
+                dtmfNumber = "0";
+                break;
+            case KeyEvent.KEYCODE_POUND:
+                playTone(ToneGenerator.TONE_DTMF_P, TONE_LENGTH_INFINITE);
+                dtmfNumber = "#";
+                break;
+            case KeyEvent.KEYCODE_STAR:
+                playTone(ToneGenerator.TONE_DTMF_S, TONE_LENGTH_INFINITE);
+                dtmfNumber = "*";
+                break;
+            default:
+                break;
+        }
 
-		KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode);
-		mDigits.onKeyDown(keyCode, event);
+        KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode);
+        mDigits.onKeyDown(keyCode, event);
 
-		// If the cursor is at the end of the text we hide it.
-		final int length = mDigits.length();
-		if (length == mDigits.getSelectionStart() && length == mDigits.getSelectionEnd()) {
-			mDigits.setCursorVisible(false);
-		}
+        // If the cursor is at the end of the text we hide it.
+        final int length = mDigits.length();
+        if (length == mDigits.getSelectionStart() && length == mDigits.getSelectionEnd()) {
+            mDigits.setCursorVisible(false);
+        }
 
-		if(myBlueToothService != null){
-			BonovoBlueToothService.PhoneState phoneState = myBlueToothService.getPhoneState();
+        if(myBlueToothService != null){
+        	BonovoBlueToothService.PhoneState phoneState = myBlueToothService.getPhoneState();
 			if((BonovoBlueToothService.PhoneState.ACTIVE == phoneState)&&(dtmfNumber.length()>0)){
 				myBlueToothService.BlueToothPhoneDTMF(dtmfNumber);
 			}
-		}
-	}
+        }
+    }
 
 	/**
-	 * Plays the specified tone for TONE_LENGTH_MS milliseconds.
-	 */
-	private void playTone(int tone) {
-		playTone(tone, TONE_LENGTH_MS);
-	}
+     * Plays the specified tone for TONE_LENGTH_MS milliseconds.
+     */
+    private void playTone(int tone) {
+        playTone(tone, TONE_LENGTH_MS);
+    }
 
-	/**
-	 * Play the specified tone for the specified milliseconds
-	 *
-	 * The tone is played locally, using the audio stream for phone calls.
-	 * Tones are played only if the "Audible touch tones" user preference
-	 * is checked, and are NOT played if the device is in silent mode.
-	 *
-	 * The tone length can be -1, meaning "keep playing the tone." If the caller does so, it should
-	 * call stopTone() afterward.
-	 *
-	 * @param tone a tone code from {@link ToneGenerator}
-	 * @param durationMs tone length.
-	 */
-	private void playTone(int tone, int durationMs) {
-		// if local tone playback is disabled, just return.
-		if (!mDTMFToneEnabled) {
-			if(DEBUG) Log.d(TAG, "====== playTone() 00");
-			return;
-		}
+    /**
+     * Play the specified tone for the specified milliseconds
+     *
+     * The tone is played locally, using the audio stream for phone calls.
+     * Tones are played only if the "Audible touch tones" user preference
+     * is checked, and are NOT played if the device is in silent mode.
+     *
+     * The tone length can be -1, meaning "keep playing the tone." If the caller does so, it should
+     * call stopTone() afterward.
+     *
+     * @param tone a tone code from {@link ToneGenerator}
+     * @param durationMs tone length.
+     */
+    private void playTone(int tone, int durationMs) {
+        // if local tone playback is disabled, just return.
+        if (!mDTMFToneEnabled) {
+        	if(DEBUG) Log.d(TAG, "====== playTone() 00");
+            return;
+        }
 
-		// Also do nothing if the phone is in silent mode.
-		// We need to re-check the ringer mode for *every* playTone()
-		// call, rather than keeping a local flag that's updated in
-		// onResume(), since it's possible to toggle silent mode without
-		// leaving the current activity (via the ENDCALL-longpress menu.)
-		AudioManager audioManager =
-				(AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		int ringerMode = audioManager.getRingerMode();
-		if ((ringerMode == AudioManager.RINGER_MODE_SILENT)
-				|| (ringerMode == AudioManager.RINGER_MODE_VIBRATE)) {
-			return;
-		}
+        // Also do nothing if the phone is in silent mode.
+        // We need to re-check the ringer mode for *every* playTone()
+        // call, rather than keeping a local flag that's updated in
+        // onResume(), since it's possible to toggle silent mode without
+        // leaving the current activity (via the ENDCALL-longpress menu.)
+        AudioManager audioManager =
+                (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int ringerMode = audioManager.getRingerMode();
+        if ((ringerMode == AudioManager.RINGER_MODE_SILENT)
+            || (ringerMode == AudioManager.RINGER_MODE_VIBRATE)) {
+            return;
+        }
 
-		synchronized (mToneGeneratorLock) {
-			if (mToneGenerator == null) {
-				Log.w(TAG, "playTone: mToneGenerator == null, tone: " + tone);
-				return;
-			}
-			// Start the new tone (will stop any playing tone)
-			mToneGenerator.startTone(tone, durationMs);
-		}
-	}
+        synchronized (mToneGeneratorLock) {
+            if (mToneGenerator == null) {
+                Log.w(TAG, "playTone: mToneGenerator == null, tone: " + tone);
+                return;
+            }
+            // Start the new tone (will stop any playing tone)
+            mToneGenerator.startTone(tone, durationMs);
+        }
+    }
 
-	/**
-	 * Stop the tone if it is played.
-	 */
-	private void stopTone() {
-		// if local tone playback is disabled, just return.
-		if (!mDTMFToneEnabled) {
-			return;
-		}
-		synchronized (mToneGeneratorLock) {
-			if (mToneGenerator == null) {
-				Log.w(TAG, "stopTone: mToneGenerator == null");
-				return;
-			}
-			mToneGenerator.stopTone();
-		}
-	}
+    /**
+     * Stop the tone if it is played.
+     */
+    private void stopTone() {
+        // if local tone playback is disabled, just return.
+        if (!mDTMFToneEnabled) {
+            return;
+        }
+        synchronized (mToneGeneratorLock) {
+            if (mToneGenerator == null) {
+                Log.w(TAG, "stopTone: mToneGenerator == null");
+                return;
+            }
+            mToneGenerator.stopTone();
+        }
+    }
 
-	// Takes the specified bitmap and returns it cropped into a circle shape
-	private Bitmap getCircleBitmap(Bitmap bitmap) {
-		final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-		final Canvas canvas = new Canvas(output);
+    // Takes the specified bitmap and returns it cropped into a circle shape
+    private Bitmap getCircleBitmap(Bitmap bitmap) {
+    	 final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+    	 final Canvas canvas = new Canvas(output);
 
-		final int color = Color.RED;
-		final Paint paint = new Paint();
-		final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-		final RectF rectF = new RectF(rect);
+    	 final int color = Color.RED;
+    	 final Paint paint = new Paint();
+    	 final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+    	 final RectF rectF = new RectF(rect);
 
-		paint.setAntiAlias(true);
-		canvas.drawARGB(0, 0, 0, 0);
-		paint.setColor(color);
-		canvas.drawOval(rectF, paint);
+    	 paint.setAntiAlias(true);
+    	 canvas.drawARGB(0, 0, 0, 0);
+    	 paint.setColor(color);
+    	 canvas.drawOval(rectF, paint);
 
-		paint.setXfermode(new PorterDuffXfermode(android.graphics.PorterDuff.Mode.SRC_IN));
-		canvas.drawBitmap(bitmap, rect, rect, paint);
+    	 paint.setXfermode(new PorterDuffXfermode(android.graphics.PorterDuff.Mode.SRC_IN));
+    	 canvas.drawBitmap(bitmap, rect, rect, paint);
 
-		bitmap.recycle();
+    	 bitmap.recycle();
 
-		return output;
-	}
+    	 return output;
+    	}
 
 	@Override
 	public void onAudioFocusChange(int focusChange) {
 		// TODO Auto-generated method stub
 		if(DEBUG) Log.d(TAG, "onAudioFocusChange focusChange: " + focusChange);
 		switch (focusChange) {
-			case AudioManager.AUDIOFOCUS_GAIN:
-				break;
-			case AudioManager.AUDIOFOCUS_LOSS:
-				break;
-			case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-				break;
-			case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-				break;
+		case AudioManager.AUDIOFOCUS_GAIN:
+			break;
+		case AudioManager.AUDIOFOCUS_LOSS:
+			break;
+		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+			break;
+		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+			break;
 
-			default:
-				break;
+		default:
+			break;
 		}
 	}
 }
