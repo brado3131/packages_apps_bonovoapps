@@ -42,14 +42,14 @@ import com.bonovo.bluetooth.BonovoBlueToothReceiver;
 @SuppressWarnings("deprecation")
 public class BonovoBlueToothService extends Service implements AudioManager.OnAudioFocusChangeListener {
 	private static final String TAG = "BonovoBlueToothService";
-	private boolean DEB = false;							// Debugging mode, on or off
+	private boolean DEB = true;				// Debugging mode, on or off
 	private static Context mContext;
 
-	private boolean myBtSwitchStatus = true; 			// 0:BT power off; 1:BT power on
-	private boolean myBtHFPStatus = false;  				// 0:Phone function disable; 1:Phone function enable
-	private boolean myBtMusicStatus = false;				// true if A2DP is supposed to be playing, else false
-	private boolean mBtMusicIsEnable = false;			// true if A2DP is enabled, else false
-	private boolean mStartComplete = false;				// true when the BT module has completed it's startup process
+	private boolean myBtSwitchStatus = true; 		// 0:BT power off; 1:BT power on
+	private boolean myBtHFPStatus = false;  		// 0:Phone function disable; 1:Phone function enable
+	private boolean myBtMusicStatus = false;		// true if A2DP is supposed to be playing, else false
+	private boolean mBtMusicIsEnable = false;		// true if A2DP is enabled, else false
+	private boolean mStartComplete = false;			// true when the BT module has completed it's startup process
 	private boolean mHFPProfileConnected = false;		// True when the HFP profile is actually connected to a device
 	private boolean mA2DPProfileConnected = false;		// True when the A2DP profile is actually connected to a device
 	private boolean mReadName = false;
@@ -85,6 +85,7 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 	 * The Phone state. One of the following:
 	 * IDLE = no phone activity
 	 * RINGING = a phone call is ringing or call waiting.
+	 * DIALING = an outgoing phone call is connecting
 	 * ACTIVE = a phone is answered.
 	 * OFFHOOK = HFP disconnect.
 	 */
@@ -143,6 +144,7 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
     private static final int MAX_PAUSE_MUSIC_TIMES = 5;
     private int mMusicStopTimes = 0;
 	private String mCurrNumber = "";
+	private String mWaitingNumber = "";
 	private long mAnswerTimer = -1;
 	private boolean mIsBtWillShutDown = false;
 	private boolean mHasAudioFocus = false;		// True if this service has the system's audio focus, used for A2DP
@@ -290,6 +292,8 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 			}else if(action.equals(ACTION_CALL_DIAL)){
 			    if(getBtHFPStatus()){
 				    String number = intent.getStringExtra(BonovoBlueToothData.PHONE_NUMBER);
+					//Added by bradobrado to help when AG does not send number in CallBack
+					setCurrentNumber(number);
 				    BlueToothPhoneDial(number);
 			    }else{
 			        Log.e(TAG, "HFP Not Connect!  intent:" + action);
@@ -451,6 +455,19 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 					setCurrentNumber((String)msg.obj);
 					i.putExtra(BonovoBlueToothData.PHONE_NUMBER, (String)msg.obj);
 				}
+				// The following added by bradobrado for cases when AG does not send number;
+				// especially for the switch from Ringing to Active
+				//else if ((getCurrentNumber().equals("") ) || getCurrentNumber() == null) {
+					//BlueToothQueryHfpStatus();
+					// WARNING!! CMD_SOLICATED_CY HAS BEEN TEMPORARILY REPLACED WITH "AT+CLCC"
+					// in the file com_bonovo_bluetooth_thread.cpp edit: put back.
+					//The following was used to send "AT+CLCC". It sent OK, but didn't work.
+					//The string above in *thread.cpp can be used for testing.
+					//BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_CY);
+				//}
+				else{
+					i.putExtra(BonovoBlueToothData.PHONE_NUMBER, getCurrentNumber());
+				}
 				i.putExtra(BonovoBlueToothData.PHONE_STATE, getPhoneState().toString());
 				
 				mContext.sendOrderedBroadcast(i, null);
@@ -458,26 +475,35 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 			break;
 			case MSG_PHONE_NEW_CALL_WAITING:{
 				Intent icw = new Intent(BonovoBlueToothData.ACTION_PHONE_NEW_CALL_WAITING);
+				setWaitingNumber((String)msg.obj);
 				icw.putExtra(BonovoBlueToothData.PHONE_NUMBER, (String)msg.obj);
 				mContext.sendBroadcast(icw);
 			}
 			break;
 			case MSG_PHONE_HELD_ACTIVE_SWITCHED_TO_CALL_WAITING:{
+				// Reverse positions of the two numbers
+				String currNum = getCurrentNumber();
+				setCurrentNumber(getWaitingNumber());
+				setWaitingNumber(currNum);
 				Intent icw = new Intent(BonovoBlueToothData.ACTION_PHONE_HELD_ACTIVE_SWITCHED_TO_CALL_WAITING);
 				mContext.sendBroadcast(icw);
 			}
 			break;
 			case MSG_PHONE_CONFERENCE_CALL:{
+				//FIXME there needs to be number handling here
 				Intent icw = new Intent(BonovoBlueToothData.ACTION_PHONE_CONFERENCE_CALL);
 				mContext.sendBroadcast(icw);
 			}
 			break;
 			case MSG_PHONE_HUNG_UP_INACTIVE:{
+				setWaitingNumber("");
 				Intent icw = new Intent(BonovoBlueToothData.ACTION_PHONE_HUNG_UP_INACTIVE);
 				mContext.sendBroadcast(icw);
 			}
 			break;
 			case MSG_PHONE_HUNG_UP_ACTIVE_SWITCHED_TO_CALL_WAITING:{
+				setCurrentNumber(getWaitingNumber());
+				setWaitingNumber("");
 				Intent icw = new Intent(BonovoBlueToothData.ACTION_PHONE_HUNG_UP_ACTIVE_SWITCHED_TO_CALL_WAITING);
 				mContext.sendBroadcast(icw);
 			}
@@ -485,8 +511,8 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 	
 			case MSG_PHONE_SIGNALLEVEL:{
 				Integer newLevel = (Integer)msg.obj;
-				if(!newLevel.equals(mPhoneSignalLevel)) {
-					mPhoneSignalLevel = newLevel;
+				if(!newLevel.equals(getPhoneSignalLevel() ) ) {
+					setPhoneSignalLevel(newLevel);
 					Intent icw = new Intent(BonovoBlueToothData.ACTION_PHONE_SIGNAL_LEVEL_CHANGED);
 					icw.putExtra(BonovoBlueToothData.LEVEL, newLevel);
 					mContext.sendBroadcast(icw);
@@ -495,8 +521,8 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 			break;
 			case MSG_PHONE_BATTERYLEVEL:{
 				Integer newLevel = (Integer)msg.obj;
-				if(!newLevel.equals(mPhoneBatteryLevel)) {
-					mPhoneBatteryLevel = newLevel;
+				if(!newLevel.equals(getPhoneBatteryLevel() ) ) {
+					setPhoneBatteryLevel(newLevel);
 					Intent icw = new Intent(BonovoBlueToothData.ACTION_PHONE_BATTERY_LEVEL_CHANGED);
 					icw.putExtra(BonovoBlueToothData.LEVEL, newLevel);
 					mContext.sendBroadcast(icw);
@@ -770,7 +796,7 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 	public void onCreate() {
 		super.onCreate();
 		mContext = getApplicationContext();
-        mListContacts = new ArrayList<BonovoBlueToothService.Contact>();
+        mListContacts = new ArrayList<Contact>();
         mListContacts.clear();
         
 		getBtName();
@@ -920,7 +946,16 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 	public void BlueToothSwitchAudio(){
 		BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_CO);
 	}
-
+	
+	/**
+	 * added by bradobrado
+	 * This will cause the AG to return the HFP status:
+	 * See CMD_UNSOLICATED_MG for the value returned
+	 */
+	public void BlueToothQueryHfpStatus() {
+		BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_CY);
+	}
+	
 	/**
 	 * add by bonovo zbiao for bluetooth phone
 	 * @param number telephone no.
@@ -1235,7 +1270,10 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 	public String getCurrentNumber() {
 		return mCurrNumber;
 	}
-	
+
+	public String getWaitingNumber() {
+		return mWaitingNumber;
+	}
 	private String cleanInfo(String info){
 		byte[] temp = info.getBytes();
 		int i = 0;
@@ -1251,6 +1289,19 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 	public void setCurrentNumber(String number) {
 		mCurrNumber = cleanInfo(number);
 	}
+
+	public void setWaitingNumber(String number) {
+		mWaitingNumber = cleanInfo(number);
+	}
+	public void setPhoneBatteryLevel(int newLevel) {
+		mPhoneBatteryLevel = newLevel;
+	}
+	public int getPhoneBatteryLevel(){return mPhoneBatteryLevel; }
+
+	public void setPhoneSignalLevel(int newLevel) {
+		mPhoneSignalLevel = newLevel;
+	}
+	public int getPhoneSignalLevel(){return mPhoneSignalLevel; }
 	
 	public long getAnswerTime(){
 		return mAnswerTimer;
@@ -1328,6 +1379,7 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
             if(getPhoneState() != PhoneState.IDLE){
 				setPhoneState(PhoneState.IDLE);
 				setCurrentNumber("");
+				setWaitingNumber("");
 				Message msg = mHandler.obtainMessage(MSG_PHONE_STATE_CHANGE);
 				mHandler.sendMessage(msg);
             }
@@ -1529,7 +1581,14 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 			if(DEB) Log.d(TAG, "Callback -->CMD_UNSOLICATED_MF");
 			break;
 		case BonovoBlueToothUnsolicatedCmd.CMD_UNSOLICATED_MG:
-			if(DEB) Log.d(TAG, "Callback -->CMD_UNSOLICATED_MG");
+			if(DEB) Log.d(TAG, "Callback -->CMD_UNSOLICATED_MG param:" + param);
+			/**
+			 * comment added by bradobrado
+			 * The AG has returned the HFP status:
+			 * 0 HFP is connectable; 1 HFP is connected; 2 Establishing an outgoing call
+			 * 3 Establishing an incoming call; 4 Active call; 5 Three-way calling : call waiting
+			 * 6 Three –way calling: on hold; 7 Three-way call: multiple calls
+			 */
 			break;
 		case BonovoBlueToothUnsolicatedCmd.CMD_UNSOLICATED_MK:{
 			// A2DP profile has just connected to a device.
@@ -1895,9 +1954,9 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
                     .build());
                 ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, index)
-                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, list.get(i).getNumber())
-                    .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, Phone.TYPE_MOBILE)
+                    .withValue(ContactsContract.Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                    .withValue(Phone.NUMBER, list.get(i).getNumber())
+                    .withValue(Phone.TYPE, Phone.TYPE_MOBILE)
                     .withYieldAllowed(true)
                     .build());
             }
@@ -1930,9 +1989,9 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 
             value.clear();
             value.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
-            value.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-            value.put(ContactsContract.CommonDataKinds.Phone.NUMBER, list.get(i).getNumber());
-            value.put(ContactsContract.CommonDataKinds.Phone.TYPE, Phone.TYPE_MOBILE);
+            value.put(ContactsContract.Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE);
+            value.put(Phone.NUMBER, list.get(i).getNumber());
+            value.put(Phone.TYPE, Phone.TYPE_MOBILE);
             context.getContentResolver().insert(ContactsContract.Data.CONTENT_URI, value);
         }
     }

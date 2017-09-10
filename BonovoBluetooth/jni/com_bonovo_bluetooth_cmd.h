@@ -156,7 +156,7 @@ typedef enum
     CODEC_LEVEL_COUNT
 }CODEC_Level;
 
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
 #define LOGV(fmt, args...)	ALOGV(fmt, ##args)
 #define LOGD(fmt, args...)	ALOGD(fmt, ##args)

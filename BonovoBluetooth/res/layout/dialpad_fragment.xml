@@ -62,7 +62,8 @@
          Dialer while a call is already in progress.
          When this UI is visible, the other Dialer elements
          (the textfield and button) are hidden. -->
-        <ListView android:id="@+id/dialpadChooser"
+        <ListView
+            android:id="@+id/dialpadChooser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:footerDividersEnabled="true" />
