@@ -457,14 +457,16 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 				}
 				// The following added by bradobrado for cases when AG does not send number;
 				// especially for the switch from Ringing to Active
-				//else if ((getCurrentNumber().equals("") ) || getCurrentNumber() == null) {
+				else if ((getCurrentNumber().equals("") ) || getCurrentNumber() == null) {
 					//BlueToothQueryHfpStatus();
 					// WARNING!! CMD_SOLICATED_CY HAS BEEN TEMPORARILY REPLACED WITH "AT+CLCC"
 					// in the file com_bonovo_bluetooth_thread.cpp edit: put back.
 					//The following was used to send "AT+CLCC". It sent OK, but didn't work.
 					//The string above in *thread.cpp can be used for testing.
 					//BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_CY);
-				//}
+					BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_IR);
+					BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_PT);
+				}
 				else{
 					i.putExtra(BonovoBlueToothData.PHONE_NUMBER, getCurrentNumber());
 				}
@@ -2137,9 +2139,12 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 		public static final int CMD_SOLICATED_PP = 56;	// Send data via SPP
 		
 		public static final int CMD_SOLICATED_MI = 57;	//
-		public static final int CMD_SOLICATED_MJ = 58;	// 
+		public static final int CMD_SOLICATED_MJ = 58;	//
+
+		public static final int CMD_SOLICATED_IR = 59;	// brado3131
+		public static final int CMD_SOLICATED_PT = 60;	// brado3131
 		
-		public static final int CMD_SOLICATED_MAX = 59;
+		public static final int CMD_SOLICATED_MAX = 61;
 	}
 	
 	class BonovoBlueToothData {

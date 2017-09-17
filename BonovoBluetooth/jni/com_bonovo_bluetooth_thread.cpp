@@ -58,7 +58,9 @@ const char *myBonovoBtSolicatedCmdArray[CMD_AT_MAX] = {
 		//5其他功能操作		 // 5 Other functional operation
 		"AT#CZ", "AT#CV", "AT#MY", "AT#MG", "AT#MH", "AT#MP", "AT#MQ", "AT#MF", "AT#MM", "AT#MN", "AT#MX", "AT#DA",
 		//added by leonkernan
-		"AT#CQ", "AT#CR", "AT#CS", "AT#CT", "AT#MZ", "AT#QD", "AT#QE", "AT#PP", "AT#MI", "AT#MJ"};
+		"AT#CQ", "AT#CR", "AT#CS", "AT#CT", "AT#MZ", "AT#QD", "AT#QE", "AT#PP", "AT#MI", "AT#MJ",
+		//added temporarily? by brado3131
+		"AT#IR", "AT#PT" };
 
 unsigned int checkSum(unsigned char* cmdBuf, int size) {
 	unsigned int temp = 0;

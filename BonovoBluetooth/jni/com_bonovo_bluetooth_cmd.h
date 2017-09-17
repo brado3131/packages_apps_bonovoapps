@@ -67,6 +67,9 @@ enum {
 	CMD_AT_PP,
 	CMD_AT_MI,
 	CMD_AT_MJ,
+	//added temporarily? by brado3131
+	CMD_AT_IR,
+	CMD_AT_PT,
 	CMD_AT_MAX,
 };
 
