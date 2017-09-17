@@ -465,7 +465,7 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 					//The string above in *thread.cpp can be used for testing.
 					//BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_CY);
 					BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_IR);
-					BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_PT);
+					//BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_PT);
 				}
 				else{
 					i.putExtra(BonovoBlueToothData.PHONE_NUMBER, getCurrentNumber());
