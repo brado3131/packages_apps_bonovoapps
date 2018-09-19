@@ -457,16 +457,16 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 				}
 				// The following added by bradobrado for cases when AG does not send number;
 				// especially for the switch from Ringing to Active
-				else if ((getCurrentNumber().equals("") ) || getCurrentNumber() == null) {
+				//else if ((getCurrentNumber().equals("") ) || getCurrentNumber() == null) {
 					//BlueToothQueryHfpStatus();
 					// WARNING!! CMD_SOLICATED_CY HAS BEEN TEMPORARILY REPLACED WITH "AT+CLCC"
 					// in the file com_bonovo_bluetooth_thread.cpp edit: put back.
 					//The following was used to send "AT+CLCC". It sent OK, but didn't work.
 					//The string above in *thread.cpp can be used for testing.
 					//BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_CY);
-					BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_IR);
+					//BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_IR);
 					//BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_PT);
-				}
+				//}
 				else{
 					i.putExtra(BonovoBlueToothData.PHONE_NUMBER, getCurrentNumber());
 				}
@@ -950,7 +950,7 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 	}
 	
 	/**
-	 * added by bradobrado
+	 * added by brado3131
 	 * This will cause the AG to return the HFP status:
 	 * See CMD_UNSOLICATED_MG for the value returned
 	 */
