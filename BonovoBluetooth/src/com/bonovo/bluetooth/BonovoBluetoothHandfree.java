@@ -148,7 +148,7 @@ public class BonovoBluetoothHandfree extends Activity
 						if(DEBUG) Log.d(TAG, "Phone call changed to idle or offhook.");
 						mCallWaitingContainer.setVisibility(View.GONE);
 						//mCallNumber.setTextSize(R.dimen.call_number_text_size);
-						
+
 						// brado3131 Added the following to remove red hangup button after call is
 						// finished but INCALL screen is still active during talk time display delay.
 						mEndCallButton.setVisibility(View.GONE);

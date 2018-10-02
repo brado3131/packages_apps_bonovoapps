@@ -97,7 +97,7 @@
     <string name="description_updata_pin_fail">Update bluetooth pin failed!</string>
     
     <string name="description_music_disable">Music function is disabled because the headunit Bluetooth adapter is not available.</string>
-    <string name="description_phone_disable">Phone function is disable because the headunit Bluetooth adapter is not available.</string>
+    <string name="description_phone_disable">Phone function is disabled because the headunit Bluetooth adapter is not available.</string>
     <string name="description_sync_contacts_disable">You can not sync contacts because the headunit Bluetooth adapter is not available.</string>
     <string name="description_volume_disable">You can not change the volume because the headunit Bluetooth adapter is not available.</string>
     <string name="description_switch_bt_music">Bt music</string>
