@@ -440,7 +440,13 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 				Intent intent = new Intent(Intent.ACTION_MAIN, null);
 				intent.addCategory("android.intent.category.APP_BT_PHONE");
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-				intent.putExtra(BonovoBlueToothData.PHONE_NUMBER, (String)msg.obj);
+				if(msg.obj != null){
+					setCurrentNumber((String)msg.obj);
+					intent.putExtra(BonovoBlueToothData.PHONE_NUMBER, (String)msg.obj);
+				}
+				else {
+					intent.putExtra(BonovoBlueToothData.PHONE_NUMBER, getCurrentNumber());
+				}
 				startActivity(intent);
 
 				Intent i2 = new Intent(BonovoBlueToothData.ACTION_PHONE_STATE_CHANGED);
@@ -1514,7 +1520,8 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
             activeAudio(AudioLevel.CODEC_LEVEL_BT_TEL);
 			if(getPhoneState() == PhoneState.IDLE){
 				setPhoneState(PhoneState.ACTIVE);
-				Message msg = mHandler.obtainMessage(MSG_START_HANDFREE, " ");
+				Message msg = mHandler.obtainMessage(MSG_START_HANDFREE);
+				//msg.obj = getCurrentNumber(); //Added by brado3131 The msg.obj used to be " " (space)
 				mHandler.sendMessage(msg);
 			}else if(getPhoneState() == PhoneState.DIALING || getPhoneState() == PhoneState.RINGING){
 				setPhoneState(PhoneState.ACTIVE);

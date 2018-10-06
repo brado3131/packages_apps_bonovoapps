@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/incomingButtonContainer"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/incomingButtonContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -28,7 +29,7 @@
         android:background="@color/darkslateblue"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:visibility="gone" >
+        android:visibility="visible" >
 	   	
 	   	<TextView
 	   	    android:id="@+id/CallWaitingNumber"
@@ -45,22 +46,25 @@
 	   	    android:layout_width="wrap_content"
 	   	    android:layout_height="wrap_content"
 	   	    android:layout_weight="1"
-	   	    android:text="@string/call_waiting_holdAndAccept" />
+	   	    android:text="@string/call_waiting_holdAndAccept"
+			android:state_enabled="false"/>
 	   	
 	   	<Button
 	   	    android:id="@+id/CWEndAndSwitch"
 	   	    android:layout_width="wrap_content"
 	   	    android:layout_height="wrap_content"
 	   	    android:layout_weight="1"
-	   	    android:text="@string/call_waiting_endAndAccept" />
+	   	    android:text="@string/call_waiting_endAndAccept"
+			android:state_enabled="false"/>
 
-	   	<Button
-	   	    android:id="@+id/CWRejectButton"
-	   	    android:layout_width="wrap_content"
-	   	    android:layout_height="wrap_content"
+		<Button
+			android:id="@+id/CWRejectButton"
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:layout_weight="1"
 			android:background="@color/red"
-	   	    android:layout_weight="1"
-	   	    android:text="@string/call_waiting_reject" />
+			android:text="@string/call_waiting_reject"
+			android:state_enabled="false"/>
 	   	
 	</LinearLayout>
     

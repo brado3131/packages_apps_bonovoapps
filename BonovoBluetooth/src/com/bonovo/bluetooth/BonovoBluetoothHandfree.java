@@ -452,16 +452,19 @@ public class BonovoBluetoothHandfree extends Activity
 		if(DEBUG) Log.d(TAG, "============ onCreate()");
 		Bundle extras = getIntent().getExtras();
 		String number = null;
+		String name = null; //Added by brado3131 as a test to see if name is present
 
 		if(extras != null) {
 			if(DEBUG) Log.d(TAG, "============ onCreate() extras is not null");
 			number = extras.getString(BonovoBlueToothService.BonovoBlueToothData.PHONE_NUMBER);
+			name = extras.getString(BonovoBlueToothService.BonovoBlueToothData.NAME);
 			mIsUserStarted = false;
 		}else{
 			mIsUserStarted = true;
 		}
 
 		if(DEBUG) Log.d(TAG, "BonovoBluetoothHandfree onCreate() number:" + number);
+		if(DEBUG) Log.d(TAG, "BonovoBluetoothHandfree onCreate() name  :" + name); //Test by brado3131
 		setView(phoneLayouts.PHONE_DIALPAD);
 
 		mProhibitedPhoneNumberRegexp = getResources().getString(R.string.config_prohibited_phone_number_regexp);
