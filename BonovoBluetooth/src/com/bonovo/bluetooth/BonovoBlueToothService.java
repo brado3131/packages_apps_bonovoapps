@@ -292,7 +292,7 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 			}else if(action.equals(ACTION_CALL_DIAL)){
 			    if(getBtHFPStatus()){
 				    String number = intent.getStringExtra(BonovoBlueToothData.PHONE_NUMBER);
-					//Added by bradobrado to help when AG does not send number in CallBack
+					//Added by brado3131 to help when AG does not send number in CallBack
 					setCurrentNumber(number);
 				    BlueToothPhoneDial(number);
 			    }else{
@@ -1592,7 +1592,7 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 		case BonovoBlueToothUnsolicatedCmd.CMD_UNSOLICATED_MG:
 			if(DEB) Log.d(TAG, "Callback -->CMD_UNSOLICATED_MG param:" + param);
 			/**
-			 * comment added by bradobrado
+			 * comment added by brado3131
 			 * The AG has returned the HFP status:
 			 * 0 HFP is connectable; 1 HFP is connected; 2 Establishing an outgoing call
 			 * 3 Establishing an incoming call; 4 Active call; 5 Three-way calling : call waiting

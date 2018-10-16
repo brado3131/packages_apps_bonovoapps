@@ -586,6 +586,8 @@ public class BonovoBluetoothHandfree extends Activity
 			break;
 
 		case R.id.endCallButton:
+			//Note by brado3131: The end call button is visible while the call waiting buttons
+			//are visible and active... end call should probably be invisible during that time?
 			if(myBlueToothService != null){
 				if(BonovoBlueToothService.PhoneState.RINGING == myBlueToothService.getPhoneState()){
 					myBlueToothService.BlueToothPhoneRejectCall();
@@ -1044,6 +1046,7 @@ public class BonovoBluetoothHandfree extends Activity
 				// dial number
 				if(myBlueToothService != null){
 					if(myBlueToothService.getBtHFPStatus()){
+						myBlueToothService.setCurrentNumber(number);
 						myBlueToothService.BlueToothPhoneDial(number);
 						setView(phoneLayouts.PHONE_RINGING_OUT);
 					} else {
