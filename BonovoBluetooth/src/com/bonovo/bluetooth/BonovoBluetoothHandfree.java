@@ -501,6 +501,8 @@ public class BonovoBluetoothHandfree extends Activity
 		super.onNewIntent(intent);
 
 		Log.d(TAG, "onNewIntent() called. action: " + intent.getAction() + "  categories: " + intent.getCategories().toString());
+        Log.d(TAG, "intent URI: " + intent.toUri(0)); //Added by brado3131 experimentally to show
+        // additional info describing the action, categories, type, flags, package, component, and extras
 
 	}
 

@@ -451,6 +451,7 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 
 				Intent i2 = new Intent(BonovoBlueToothData.ACTION_PHONE_STATE_CHANGED);
 				i2.putExtra(BonovoBlueToothData.PHONE_STATE, getPhoneState().toString());
+				i2.putExtra(BonovoBlueToothData.PHONE_NUMBER, getCurrentNumber()); //added by brado3131
 				mContext.sendOrderedBroadcast(i2, null);
 				break;
 			}
