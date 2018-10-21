@@ -73,7 +73,7 @@
 	<string name="onscreenMuteText">Mute</string>
 	<string name="call_waiting_endAndAccept">End and Accept</string>
 	<string name="call_waiting_holdAndAccept">Hold and Accept</string>
-	<string name="call_waiting_reject">Reject</string>
+	<string name="call_waiting_reject"> Reject </string>
 	<string name="call_waiting_end_held">End held call</string>
 	<string name="call_waiting_swap_to_held">Swap to held</string>
 	<string name="description_target_answer">Answer</string>

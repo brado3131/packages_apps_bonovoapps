@@ -1528,6 +1528,12 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 				setPhoneState(PhoneState.ACTIVE);
 				Message msg = mHandler.obtainMessage(MSG_PHONE_STATE_CHANGE);
 				mHandler.sendMessage(msg);
+			}else if(getPhoneState() == PhoneState.ACTIVE) { //The waiting call must have ended
+				// During testing, IG was received when a held caller hung up.
+				// Need to remove the call waiting container here or send a message and have
+				// the handler do it.
+				Message msg = mHandler.obtainMessage(MSG_PHONE_HUNG_UP_INACTIVE);
+				mHandler.sendMessage(msg);
 			}
 			break;
 		case BonovoBlueToothUnsolicatedCmd.CMD_UNSOLICATED_II:{
