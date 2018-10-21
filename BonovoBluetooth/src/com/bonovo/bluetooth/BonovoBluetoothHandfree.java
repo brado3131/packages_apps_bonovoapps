@@ -652,13 +652,13 @@ public class BonovoBluetoothHandfree extends Activity
 			if(myBlueToothService != null){
 				myBlueToothService.BlueToothPhoneEndAndSwitchToWaitingCall();
 			}
-
+			break;
 		case R.id.CWHoldAndSwitch:
 			// Switch to call waiting and put current call on hold
 			if(myBlueToothService != null){
 				myBlueToothService.BlueToothPhoneHoldAndSwitchToWaitingCall();
 			}
-
+			break;
 		default:
 			Log.wtf(TAG, "Unexpected onClick() event from:" + v);
 			break;
