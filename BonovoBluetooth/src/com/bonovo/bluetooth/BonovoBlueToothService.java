@@ -1053,7 +1053,13 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 	 */
 	public void BlueToothPhoneEndAndSwitchToWaitingCall() {
 		if (mHFPProfileConnected) {
-			BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_CR);
+		    BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_CR);
+            // The above appears not to work if Motorola Nexus 6 is AG. I am going to try
+            // a workaround by doing "Hold and Switch" then dumping the held call.
+
+            // Workaround(maybe):
+            BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_CS); // Hold and switch
+            BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_CQ); // End held call
 		}
 	}
 	

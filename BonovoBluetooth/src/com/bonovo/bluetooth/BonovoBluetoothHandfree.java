@@ -275,7 +275,7 @@ public class BonovoBluetoothHandfree extends Activity
 			}else if(BonovoBlueToothData.ACTION_PHONE_HUNG_UP_ACTIVE_SWITCHED_TO_CALL_WAITING.equals(action)){
 				// Our inactive call is now active and our original call is gone
 				//mCallNumber.setText(mCallWaitingNumber.getText());
-                
+
 				mCallWaitingContainer.setVisibility(View.GONE);
 				mConferenceButton.setVisibility(View.GONE);
 
