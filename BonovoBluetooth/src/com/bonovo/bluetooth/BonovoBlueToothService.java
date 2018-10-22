@@ -505,7 +505,11 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 			}
 			break;
 			case MSG_PHONE_HUNG_UP_INACTIVE:{
-				setWaitingNumber("");
+				// brado3131 This condition gets triggered after the AG receives "End and Switch"
+				// command. I am going try using this to remove the call waiting UI only, and
+				// leave the waiting number there in case it needs to get swapped when we receive
+				// CMD_UNSOLICATED_IT
+				//setWaitingNumber("");
 				Intent icw = new Intent(BonovoBlueToothData.ACTION_PHONE_HUNG_UP_INACTIVE);
 				mContext.sendBroadcast(icw);
 			}
@@ -1695,6 +1699,9 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 		case BonovoBlueToothUnsolicatedCmd.CMD_UNSOLICATED_IN:{
 			if(DEB) Log.d(TAG, "Callback -->CMD_UNSOLICATED_IN");
 			// Release held or reject waiting call (hang up the inactive call)
+			// brado3131 This may be buggy in the Flaircomm chip. This gets fired
+			// by the AG immediately after AT#CR; when we should get CMD_UNSOLICATED_IT.
+			// I'm going to assume it means that there is no 2nd call and end the UI for it.
 			Message msg = mHandler.obtainMessage(MSG_PHONE_HUNG_UP_INACTIVE);
 			mHandler.sendMessage(msg);
 			break;
