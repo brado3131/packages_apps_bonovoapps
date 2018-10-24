@@ -57,6 +57,7 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 	private boolean mIsBindered = false;
 	private boolean mIsSyncingContacts = false;
 	private boolean mMicMuted = false;					// HFP is the microphone muted or not
+    private boolean mConferenceCallPending = false;     // HFP has requested conference of 2 calls
 	private int mPhoneSignalLevel = 0;					// Signal level of connected phone, between 0 and 5
 	private int mPhoneBatteryLevel = 0;					// Battery level of connected phone, between 0 and 5
 	private String mPhoneOperatorName = "";				// Name of the network the phone is connected to (if provided by phone)
@@ -1077,6 +1078,7 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 	 */
 	public void BlueToothPhoneConferenceCalls() {
 		if (mHFPProfileConnected) {
+		    mConferenceCallPending = true;
 			BonovoBlueToothSet(BonovoBlueToothRequestCmd.CMD_SOLICATED_CT);
 		}
 	}
@@ -1515,18 +1517,19 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 				msg.obj = param;
 				mHandler.sendMessage(msg);
 			}
-			
+
 			break;
-		case BonovoBlueToothUnsolicatedCmd.CMD_UNSOLICATED_IF:{
-                recoveryAudio(AudioLevel.CODEC_LEVEL_BT_TEL);
-				if(DEB) Log.d(TAG, "Callback -->CMD_UNSOLICATED_IF   getPhoneState():" + getPhoneState());
-				setPhoneState(PhoneState.IDLE);
-				setCurrentNumber("");
-				Message msg = mHandler.obtainMessage(MSG_PHONE_STATE_CHANGE);
-				mHandler.sendMessage(msg);
-			}
+		case BonovoBlueToothUnsolicatedCmd.CMD_UNSOLICATED_IF: { // Hang up call (including conferenced)
+			recoveryAudio(AudioLevel.CODEC_LEVEL_BT_TEL);
+			if(DEB)	Log.d(TAG, "Callback -->CMD_UNSOLICATED_IF   getPhoneState():" + getPhoneState());
+			setPhoneState(PhoneState.IDLE);
+			setCurrentNumber("");
+			setWaitingNumber("");
+			Message msg = mHandler.obtainMessage(MSG_PHONE_STATE_CHANGE);
+			mHandler.sendMessage(msg);
+		    }
 			break;
-		case BonovoBlueToothUnsolicatedCmd.CMD_UNSOLICATED_IG:
+		case BonovoBlueToothUnsolicatedCmd.CMD_UNSOLICATED_IG: // Pick up call
 			if(DEB) Log.d(TAG, "Callback -->CMD_UNSOLICATED_IG   getPhoneState():" + getPhoneState());
             activeAudio(AudioLevel.CODEC_LEVEL_BT_TEL);
 			if(getPhoneState() == PhoneState.IDLE){
@@ -1539,8 +1542,12 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 				Message msg = mHandler.obtainMessage(MSG_PHONE_STATE_CHANGE);
 				mHandler.sendMessage(msg);
 			}else if(getPhoneState() == PhoneState.ACTIVE) { //The waiting call must have ended
-				// During testing, IG was received when a held caller hung up.
-				// Need to remove the call waiting container here or send a message and have
+				// During testing, IG was received when a held caller hung up, and when a call
+                // transitioned from waiting/held to conferenced.
+                if ( ! mConferenceCallPending){
+                    setWaitingNumber("");
+                }
+				// We need to remove the call waiting container here or send a message and have
 				// the handler do it.
 				Message msg = mHandler.obtainMessage(MSG_PHONE_HUNG_UP_INACTIVE);
 				mHandler.sendMessage(msg);
@@ -1558,16 +1565,16 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 			if(DEB) Log.d(TAG, "Callback -->CMD_UNSOLICATED_IR param:" + param);
 			activeAudio(AudioLevel.CODEC_LEVEL_BT_TEL);
 			setCurrentNumber(param);
-			
+
 			if((getPhoneState() != PhoneState.ACTIVE)&&(getPhoneState() != PhoneState.DIALING)){
 				setPhoneState(PhoneState.DIALING);
-				
+
 				Message msg = mHandler.obtainMessage(MSG_PHONE_STATE_CHANGE);
 				msg.obj = cleanInfo(param);
 				mHandler.sendMessage(msg);
 			}else if(getPhoneState() == PhoneState.IDLE){
 				setPhoneState(PhoneState.ACTIVE);
-					
+
 				Message msg = mHandler.obtainMessage(MSG_START_HANDFREE);
 				msg.obj = cleanInfo(param);
 				mHandler.sendMessage(msg);
