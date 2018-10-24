@@ -1525,6 +1525,7 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 			setPhoneState(PhoneState.IDLE);
 			setCurrentNumber("");
 			setWaitingNumber("");
+			mConferenceCallPending = false;
 			Message msg = mHandler.obtainMessage(MSG_PHONE_STATE_CHANGE);
 			mHandler.sendMessage(msg);
 		    }
