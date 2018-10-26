@@ -238,7 +238,8 @@ public class BonovoBluetoothHandfree extends Activity
 
 			}else if(BonovoBlueToothData.ACTION_PHONE_CONFERENCE_CALL.equals(action)){
 				// Our calls have merged and we now have two people on one call
-				mCallNumber.setText(mCallNumber.getText() + "\n" + mCallWaitingNumber.getText());
+				String confString = mCallNumber.getText() + "\n" + mCallWaitingNumber.getText();
+				mCallNumber.setText(confString);
 				mCallNumber.setTextSize(R.dimen.call_number_conference_text_size);
 
 				setContactPhoto(mContext, "0");	 // More than one person in call, default the contact photo
