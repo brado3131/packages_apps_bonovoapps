@@ -25,6 +25,7 @@ import android.graphics.RectF;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -244,6 +245,8 @@ public class BonovoBluetoothHandfree extends Activity
 				mCallNumber.setText(confString);
 				//mCallNumber.setText("Conference Call");
 				//mCallNumber.setTextSize(R.dimen.call_number_conference_text_size);
+                mCallNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                        getResources().getDimension(R.dimen.call_number_conference_text_size));
 
 				setContactPhoto(mContext, "0");	 // More than one person in call, default the contact photo
 
