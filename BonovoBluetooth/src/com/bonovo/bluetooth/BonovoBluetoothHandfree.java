@@ -241,7 +241,8 @@ public class BonovoBluetoothHandfree extends Activity
 				String confString = "Conference With:" + "\n" + "  " + mCallNumber.getText()
 						+ "\n" + "& " + mCallWaitingNumber.getText();
 				if(DEBUG) Log.d(TAG, "Conference Started. confString=" + confString);
-				mCallNumber.setText(confString);
+				//mCallNumber.setText(confString);
+				mCallNumber.setText("Conference Call");
 				mCallNumber.setTextSize(R.dimen.call_number_conference_text_size);
 
 				setContactPhoto(mContext, "0");	 // More than one person in call, default the contact photo
