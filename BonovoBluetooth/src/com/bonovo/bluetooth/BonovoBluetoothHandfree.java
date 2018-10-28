@@ -238,7 +238,9 @@ public class BonovoBluetoothHandfree extends Activity
 
 			}else if(BonovoBlueToothData.ACTION_PHONE_CONFERENCE_CALL.equals(action)){
 				// Our calls have merged and we now have two people on one call
-				String confString = mCallNumber.getText() + "\n" + mCallWaitingNumber.getText();
+				String confString = "Conference With:" + "\n" + "  " + mCallNumber.getText()
+						+ "\n" + "& " + mCallWaitingNumber.getText();
+				if(DEBUG) Log.d(TAG, "Conference Started. confString=" + confString);
 				mCallNumber.setText(confString);
 				mCallNumber.setTextSize(R.dimen.call_number_conference_text_size);
 

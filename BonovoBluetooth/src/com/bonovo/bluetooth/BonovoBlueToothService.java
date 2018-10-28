@@ -1616,7 +1616,7 @@ public class BonovoBlueToothService extends Service implements AudioManager.OnAu
 			break;
 		case BonovoBlueToothUnsolicatedCmd.CMD_UNSOLICATED_MG:
 			if(DEB) Log.d(TAG, "Callback -->CMD_UNSOLICATED_MG param:" + param);
-			/**
+			/*
 			 * comment added by brado3131
 			 * The AG has returned the HFP status:
 			 * 0 HFP is connectable; 1 HFP is connected; 2 Establishing an outgoing call

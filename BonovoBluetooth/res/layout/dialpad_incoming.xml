@@ -96,6 +96,7 @@
 		        android:layout_marginLeft="@dimen/call_info_left_margin"
 		        android:textColor="@color/white"
 		        android:textSize="@dimen/call_number_text_size"
+                android:maxLines="5"
 		        android:visibility="visible" />
 			
 			<TextView
