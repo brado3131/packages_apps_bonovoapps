@@ -149,6 +149,8 @@ public class BonovoBluetoothHandfree extends Activity
 						if(DEBUG) Log.d(TAG, "Phone call changed to idle or offhook.");
 						mCallWaitingContainer.setVisibility(View.GONE);
 						//mCallNumber.setTextSize(R.dimen.call_number_text_size);
+						mCallNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+								getResources().getDimension(R.dimen.call_number_text_size));
 
 						// brado3131 Added the following to remove red hangup button after call is
 						// finished but INCALL screen is still active during talk time display delay.
@@ -239,11 +241,12 @@ public class BonovoBluetoothHandfree extends Activity
 
 			}else if(BonovoBlueToothData.ACTION_PHONE_CONFERENCE_CALL.equals(action)){
 				// Our calls have merged and we now have two people on one call
-				String confString = "Conference With:" + "\n" + "  " + mCallNumber.getText()
-						+ "\n" + "& " + mCallWaitingNumber.getText();
+				String confString = "Conference With:" + "\n"
+						+ mCallNumber.getText() + "  &" + "\n"
+						+ mCallWaitingNumber.getText();
 				if(DEBUG) Log.d(TAG, "Conference Started. confString=" + confString);
 				mCallNumber.setText(confString);
-				//mCallNumber.setText("Conference Call");
+				//The following was the original text size adjustment; it did not work.
 				//mCallNumber.setTextSize(R.dimen.call_number_conference_text_size);
                 mCallNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                         getResources().getDimension(R.dimen.call_number_conference_text_size));
